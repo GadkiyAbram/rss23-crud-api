@@ -7,6 +7,7 @@ import {User, Users} from '../interfaces/User';
 import {create, findAll} from '../services/Users';
 import {Codes} from '../constants';
 import utils from '../utils/index';
+import {StringAsJSON} from "../utils/StringAsJSON";
 
 const {ObjectAsString} = utils;
 
@@ -34,29 +35,37 @@ export const getAllUsers = async (): Promise<AllUsers> => {
 // GET api/users/{userId}
 
 // POST api/users
-export const createNewUser = async (req: IncomingMessage, res: ServerResponse)=> {
+export const createNewUser = async (newUserData: string): Promise<User | {}> => {
     try {
-        let newUserData: string = '';
-
-        req.on('data', (chunk) => {
-            newUserData += chunk;
-        });
-
-        req.on('end', async () => {
-            let newUser = JSON.parse(newUserData);
-
-            const addedUser: User = await create(newUser);
-
-            if (addedUser?.id) {
-                res.writeHead(Codes.SUCCESS_ADD);
-                res.end();
-            }
-        });
-        res.writeHead(Codes.SUCCESS_ADD, )
-    } catch (err) {
-        res.writeHead(Codes.INTERNAL_ERROR).end(err);
+        return await create(StringAsJSON(newUserData));
+    } catch (_) {
+        return {};
     }
 }
+
+// export const createNewUser = async (req: IncomingMessage, res: ServerResponse)=> {
+//     try {
+//         let newUserData: string = '';
+//
+//         req.on('data', (chunk) => {
+//             newUserData += chunk;
+//         });
+//
+//         req.on('end', async () => {
+//             let newUser = JSON.parse(newUserData);
+//
+//             const addedUser: User = await create(newUser);
+//
+//             if (addedUser?.id) {
+//                 res.writeHead(Codes.SUCCESS_ADD);
+//                 res.end();
+//             }
+//         });
+//         res.writeHead(Codes.SUCCESS_ADD, )
+//     } catch (err) {
+//         res.writeHead(Codes.INTERNAL_ERROR).end(err);
+//     }
+// }
 
 // PUT api/users/{userId}
 

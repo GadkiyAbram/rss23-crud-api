@@ -10,6 +10,7 @@ import {
 } from './constants';
 import {createNewUser, getAllUsers} from './controllers/users';
 import utils from './utils/index';
+import {StringAsJSON} from "./utils/StringAsJSON";
 
 dotenv.config();
 
@@ -34,7 +35,22 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === Methods.POST && req.url === '/api/users') {
-        return createNewUser(req, res);
+        let newUserData: string = '';
+
+        req.on('data', (chunk) => {
+            newUserData += chunk;
+        });
+
+        req.on('end', async () => {
+            const newUser = await createNewUser(newUserData);
+            
+            if ('id' in newUser) {
+                res.writeHead(Codes.SUCCESS_ADD)
+                    .end();
+            } else {
+                res.writeHead(Codes.INTERNAL_ERROR);
+            }
+        });
     }
 });
 
