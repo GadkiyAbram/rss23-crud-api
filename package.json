@@ -4,9 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:dev": "ts-node src/index.ts",
+    "start:prod": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.43.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.3.1",
+    "@types/uuid": "^9.0.2",
+    "typescript": "^5.1.3"
+  }
 }
