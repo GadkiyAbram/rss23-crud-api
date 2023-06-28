@@ -1,22 +1,13 @@
 // GET api/users
-import {
-    IncomingMessage,
-    ServerResponse
-} from 'http';
-import {User, Users} from '../interfaces/User';
-import {create, findAll} from '../services/Users';
-import {Codes} from '../constants';
+import {User, Users} from '../interfaces/Users/User';
+import {create, find, findAll, update} from '../services/Users/Users';
 import utils from '../utils/index';
-import {StringAsJSON} from "../utils/StringAsJSON";
+import {StringAsJSON} from '../utils/StringAsJSON';
+import {UsersResult} from '../interfaces/Users/UsersResult';
 
 const {ObjectAsString} = utils;
 
-type AllUsers = {
-    success: boolean,
-    message: string
-}
-
-export const getAllUsers = async (): Promise<AllUsers> => {
+export const getAllUsers = async (): Promise<UsersResult> => {
     try {
         const result: User[] = await findAll() || [];
 
@@ -33,40 +24,48 @@ export const getAllUsers = async (): Promise<AllUsers> => {
 }
 
 // GET api/users/{userId}
+export const getUserById = async (userId: string): Promise<UsersResult>  => {
+    let result: UsersResult = {
+        success: false,
+        message: ''
+    };
+
+    const user: User = await find(userId);
+
+    if (user) {
+        result = {
+            ...result,
+            success: true,
+            message: ObjectAsString(user)
+        };
+    }
+
+    return result;
+}
 
 // POST api/users
 export const createNewUser = async (newUserData: string): Promise<User | {}> => {
     try {
-        return await create(StringAsJSON(newUserData));
+        return create(StringAsJSON(newUserData));
     } catch (_) {
         return {};
     }
 }
 
-// export const createNewUser = async (req: IncomingMessage, res: ServerResponse)=> {
-//     try {
-//         let newUserData: string = '';
-//
-//         req.on('data', (chunk) => {
-//             newUserData += chunk;
-//         });
-//
-//         req.on('end', async () => {
-//             let newUser = JSON.parse(newUserData);
-//
-//             const addedUser: User = await create(newUser);
-//
-//             if (addedUser?.id) {
-//                 res.writeHead(Codes.SUCCESS_ADD);
-//                 res.end();
-//             }
-//         });
-//         res.writeHead(Codes.SUCCESS_ADD, )
-//     } catch (err) {
-//         res.writeHead(Codes.INTERNAL_ERROR).end(err);
-//     }
-// }
-
 // PUT api/users/{userId}
+export const updateUser = async (
+    userId: string,
+    newUserData: string
+): Promise<User | null | undefined> => {
+    try {
+        const userToUpdate = await find(userId);
+
+        if (userToUpdate) {
+            return update(userId, StringAsJSON(newUserData));
+        }
+    } catch (_) {
+        return null;
+    }
+}
 
 // DELETE api/users/{userId}

@@ -1,6 +1,6 @@
-import {User, Users} from '../interfaces/User';
-import {users} from '../data/users';
-import {BaseUser} from '../interfaces/BaseUser';
+import {User, Users} from '../../interfaces/Users/User';
+import {users} from '../../data/users';
+import {BaseUser} from '../../interfaces/Users/BaseUser';
 import {v4 as uuidV4} from 'uuid';
 
 export const findAll = async (): Promise<User[]> => Object.values(users);

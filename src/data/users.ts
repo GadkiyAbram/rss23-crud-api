@@ -1,20 +1,20 @@
 import {
     User,
     Users
-} from '../interfaces/User';
+} from '../interfaces/Users/User';
 
 let users: Users = {
     '1': {
         id: '1',
-        firstName: 'First1 Name',
-        lastName: 'Last1 Name',
-        age: 36
+        username: 'FirstUserName1',
+        age: 36,
+        hobbies: ['IT', 'Computers', 'Moto']
     },
     '2': {
         id: '2',
-        firstName: 'First2 Name',
-        lastName: 'Last2 Name',
-        age: 36
+        username: 'FirstUserName2',
+        age: 33,
+        hobbies: ['Auto', 'Flowers']
     }
 };
 

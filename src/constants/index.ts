@@ -1,7 +1,9 @@
-import {Codes} from './http';
-import {Methods} from './methods';
+import {codes} from './http';
+import {methods} from './methods';
+import * as errors from './errors';
 
 export {
-    Codes,
-    Methods
+    codes,
+    methods,
+    errors
 }
