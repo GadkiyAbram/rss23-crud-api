@@ -1,9 +1,11 @@
-import {ObjectAsString} from './ObjectAsString';
-import {StringAsJSON} from './StringAsJSON';
+import {objectAsString} from './objectAsString';
+import {stringAsJSON} from './stringAsJSON';
 import {isUUID} from './isUUID';
+import {checkRequiredFields} from './checkRequiredFields';
 
 export default {
-    ObjectAsString,
-    StringAsJSON,
-    isUUID
+    objectAsString,
+    stringAsJSON,
+    isUUID,
+    checkRequiredFields
 }

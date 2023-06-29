@@ -1,1 +1,0 @@
-export const ObjectAsString = (objectToStringify: Object) => JSON.stringify(objectToStringify);

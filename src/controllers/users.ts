@@ -1,11 +1,15 @@
 // GET api/users
 import {User, Users} from '../interfaces/Users/User';
-import {create, find, findAll, update} from '../services/Users/Users';
+import {create, find, findAll, remove, update} from '../services/Users/Users';
 import utils from '../utils/index';
-import {StringAsJSON} from '../utils/StringAsJSON';
+import {stringAsJSON} from '../utils/stringAsJSON';
 import {UsersResult} from '../interfaces/Users/UsersResult';
+import {userRequiredFields} from '../interfaces/Users/BaseUser';
 
-const {ObjectAsString} = utils;
+const {
+    objectAsString,
+    checkRequiredFields
+} = utils;
 
 export const getAllUsers = async (): Promise<UsersResult> => {
     try {
@@ -13,7 +17,7 @@ export const getAllUsers = async (): Promise<UsersResult> => {
 
         return {
             success: true,
-            message: ObjectAsString(result)
+            message: objectAsString(result)
         }
     } catch (err) {
         return {
@@ -36,7 +40,7 @@ export const getUserById = async (userId: string): Promise<UsersResult>  => {
         result = {
             ...result,
             success: true,
-            message: ObjectAsString(user)
+            message: objectAsString(user)
         };
     }
 
@@ -46,7 +50,15 @@ export const getUserById = async (userId: string): Promise<UsersResult>  => {
 // POST api/users
 export const createNewUser = async (newUserData: string): Promise<User | {}> => {
     try {
-        return create(StringAsJSON(newUserData));
+        const newUser = stringAsJSON(newUserData);
+
+        const allRequiredFieldsSettled = checkRequiredFields(userRequiredFields, Object.keys(newUser));
+
+        if (!allRequiredFieldsSettled) {
+            return {}
+        }
+
+        return create(stringAsJSON(newUserData));
     } catch (_) {
         return {};
     }
@@ -61,8 +73,17 @@ export const updateUser = async (
         const userToUpdate = await find(userId);
 
         if (userToUpdate) {
-            return update(userId, StringAsJSON(newUserData));
+            return update(userId, stringAsJSON(newUserData));
         }
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+}
+
+export const deleteUser = async (userId: string): Promise<boolean | null> => {
+    try {
+        return await remove(userId);
     } catch (_) {
         return null;
     }

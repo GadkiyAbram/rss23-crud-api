@@ -15,30 +15,21 @@ export const create = async (newUser: BaseUser) : Promise<User> => {
         ...newUser
     };
 
-    return users[id];
+    return await find(id);
 }
 
-export const update = async (
-    id: string,
-    userUpdated: BaseUser
-    ): Promise<User | null> => {
+export const update = async (id: string, userUpdated: BaseUser): Promise<User | null> => {
+    users[id] = {id, ...userUpdated};
+
+    return find(id);
+}
+
+export const remove = async (id: string): Promise<null | boolean> => {
     const user = await find(id);
 
     if (!user) {
         return null;
     }
 
-    users[id] = { id, ...userUpdated};
-
-    return users[id];
-}
-
-export const remove = async (id: string): Promise<null | void> => {
-    const user = await find(id);
-
-    if (!user) {
-        return null;
-    }
-
-    delete users[id];
+    return delete users[id];
 }

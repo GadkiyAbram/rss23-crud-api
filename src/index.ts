@@ -6,15 +6,12 @@ import {
     errors
 } from './constants';
 import {
-    createNewUser,
+    createNewUser, deleteUser,
     getAllUsers,
     getUserById,
     updateUser
 } from './controllers/users';
-import {ObjectAsString} from './utils/ObjectAsString';
-import {isUUID} from './utils/isUUID';
-import * as url from "url";
-import {validate} from "uuid";
+import {objectAsString} from './utils/objectAsString';
 
 dotenv.config();
 
@@ -27,8 +24,6 @@ const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 const HEADERS = {'Content-Type': 'application/json'};
 
 const server = createServer(async (req, res) => {
-    // res.writeHead(codes.SUCCESS).end(req.url);
-
     if (req.method === methods.GET && req.url === '/api/users') {
         const result = await getAllUsers();
 
@@ -51,10 +46,9 @@ const server = createServer(async (req, res) => {
             const newUser = await createNewUser(newUserData);
             
             if ('id' in newUser) {
-                res.writeHead(codes.SUCCESS_ADD)
-                    .end();
+                res.writeHead(codes.SUCCESS_ADD).end(objectAsString(newUser));
             } else {
-                res.writeHead(codes.INTERNAL_ERROR);
+                res.writeHead(codes.INTERNAL_ERROR).end();
             }
         });
     }
@@ -65,15 +59,6 @@ const server = createServer(async (req, res) => {
         if (!userId.match(/\w+/)) {
             res.writeHead(codes.BAD_DATA).end(errors.INVALID_USER_ID);
         }
-
-        // if (!isUUID(userId)) {
-        //     console.log(userId, isUUID(userId));
-        //     res.writeHead(codes.BAD_DATA).end(errors.INVALID_USER_ID);
-        // }
-
-        // if (validate(userId)) {
-        //     res.writeHead(codes.BAD_DATA).end(errors.INVALID_USER_ID);
-        // }
 
         const result = await getUserById(userId);
 
@@ -103,11 +88,27 @@ const server = createServer(async (req, res) => {
                 'id' in result
             ) {
                 res.writeHead(codes.SUCCESS)
-                    .end(ObjectAsString(result));
+                    .end(objectAsString(result));
             } else {
-                res.writeHead(codes.INTERNAL_ERROR);
+                res.writeHead(codes.INTERNAL_ERROR).end();
             }
         });
+    }
+
+    if (req.method === methods.DELETE && req.url?.match(/users\//)) {
+        const userId: string = req.url?.split('/')[3];
+
+        if (!userId.match(/\w+/)) {
+            res.writeHead(codes.BAD_DATA).end(errors.INVALID_USER_ID);
+        }
+
+        const deleted = await deleteUser(userId);
+
+        if (deleted) {
+            res.writeHead(codes.DELETED).end();
+        } else {
+            res.writeHead(codes.NOT_FOUND).end(errors.USER_NOT_FOUND);
+        }
     }
 });
 
