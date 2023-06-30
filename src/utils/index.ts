@@ -1,7 +1,7 @@
-import {objectAsString} from './objectAsString';
-import {stringAsJSON} from './stringAsJSON';
-import {isUUID} from './isUUID';
-import {checkRequiredFields} from './checkRequiredFields';
+import {objectAsString} from './objectAsString.js';
+import {stringAsJSON} from './stringAsJSON.js';
+import {isUUID} from './isUUID.js';
+import {checkRequiredFields} from './checkRequiredFields.js';
 
 export default {
     objectAsString,

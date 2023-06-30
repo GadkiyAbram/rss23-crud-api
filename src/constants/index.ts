@@ -1,6 +1,6 @@
-import {codes} from './http';
-import {methods} from './methods';
-import * as errors from './errors';
+import {codes} from './http.js';
+import {methods} from './methods.js';
+import * as errors from './errors.js';
 
 export {
     codes,

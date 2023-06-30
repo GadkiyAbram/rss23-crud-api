@@ -4,20 +4,24 @@ import {
     codes,
     methods,
     errors
-} from './constants';
+} from './constants/index.ts';
 import {
     createNewUser, deleteUser,
     getAllUsers,
     getUserById,
     updateUser
-} from './controllers/users';
-import {objectAsString} from './utils/objectAsString';
+} from './controllers/users.js';
+import {objectAsString} from './utils/objectAsString.js';
 
 dotenv.config();
 
 if (!process.env.PORT) {
     process.exit(1);
 }
+
+console.log(process.execArgv);
+
+let port = parseInt(process.argv.slice(2)[0]);
 
 const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 
@@ -44,7 +48,7 @@ const server = createServer(async (req, res) => {
 
         req.on('end', async () => {
             const newUser = await createNewUser(newUserData);
-            
+
             if ('id' in newUser) {
                 res.writeHead(codes.SUCCESS_ADD).end(objectAsString(newUser));
             } else {
@@ -112,6 +116,6 @@ const server = createServer(async (req, res) => {
     }
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is up and running on ${PORT} port`);
+server.listen(port, () => {
+    console.log(`Server is up and running on ${port} port`);
 });

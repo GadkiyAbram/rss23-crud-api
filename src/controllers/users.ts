@@ -1,10 +1,10 @@
 // GET api/users
-import {User, Users} from '../interfaces/Users/User';
-import {create, find, findAll, remove, update} from '../services/Users/Users';
-import utils from '../utils/index';
-import {stringAsJSON} from '../utils/stringAsJSON';
-import {UsersResult} from '../interfaces/Users/UsersResult';
-import {userRequiredFields} from '../interfaces/Users/BaseUser';
+import {User, Users} from '../interfaces/Users/User.js';
+import {create, find, findAll, remove, update} from '../services/Users/Users.js';
+import utils from '../utils/index.js';
+import {stringAsJSON} from '../utils/stringAsJSON.js';
+import {UsersResult} from '../interfaces/Users/UsersResult.js';
+import {userRequiredFields} from '../interfaces/Users/BaseUser.js';
 
 const {
     objectAsString,

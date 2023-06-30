@@ -1,7 +1,7 @@
 import {
     User,
     Users
-} from '../interfaces/Users/User';
+} from '../interfaces/Users/User.js';
 
 let users: Users = {
     '1': {
