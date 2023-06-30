@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon --esm src/balancer.ts",
+    "start:dev": "nodemon --esm src/index.ts",
+    "start:multi": "nodemon --esm src/primary.ts",
     "start:prod": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,26 +1,69 @@
+import * as dotenv from 'dotenv';
 import cluster from 'cluster';
-import http from 'http';
 import os from 'os';
-let port = 5000;
-const server = http.createServer().listen(port);
+import {server} from './server.js';
+import http from 'http';
+import {balancer} from './balancer.js';
+
+dotenv.config();
+
+const cpuCount = os.cpus().length;
+const HOST: string = process.env.HOST as string;
+let port: number = parseInt(process.env.PORT as string, 10) || 7000;
+
+let workerIndex: number = 0;
+
+const workerUrls: string[] = [];
 
 if (cluster.isPrimary) {
-    for (let i = 0; i < os.cpus().length - 1; i++) {
-        server.on("connect", (req) => {
-            const worker = cluster.fork();
-            worker.send(req);
-        });
+    console.log(`Master process ${process.pid} on ${port} is running`);
+
+    for (let i = 0; i < cpuCount; i++) {
+        let workerPort = ++port;
+
+        cluster.fork({port: workerPort});
+        workerUrls.push(`${HOST}:${workerPort}`);
     }
-}
 
-if (cluster.isWorker) {
-    const worker_CRUD_server = http
-        .createServer(/* hadling requests and sending responses - CRUD with postsDB*/)
-        .listen(++port, () => {
-            console.log(`Server is up and running on ${port} port`);
-        });
+    const primaryServer = balancer(workerUrls);
 
-    process.on("message", (req) => {
-        /* somehow send req to worker_CRUD_server and invoke proceeding request and sending response to client?? */
+    // const primaryServer = http.createServer((req, resp) => {
+    //     const currentWorkerUrl: string = workerUrls[workerIndex];
+    //
+    //     http.get(currentWorkerUrl + req.url, (response) => {
+    //         let data = '';
+    //
+    //         response.on('data', (chunk) => {
+    //             data += chunk;
+    //         });
+    //
+    //         response.on('end', () => {
+    //             resp.end(data);
+    //             workerIndex = (workerIndex + 1) % workerUrls.length
+    //         });
+    //     });
+    // });
+
+    primaryServer.listen(4000, () => {
+        console.log(`Main Cluster running on 4000`);
     });
+
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker on ${process.pid} died`);
+        cluster.fork();
+    });
+} else {
+    let workerPort = process.env.port;
+
+    const workerServer = server();
+
+    // process.on('message', function(msg) {
+    //     console.log('Worker ' + process.pid + ' received message from master.', msg);
+    // });
+
+    // cluster.on('message', () => {
+    //     console.log(`Response from ${workerPort}`);
+    // });
+
+    workerServer.listen(workerPort, () => console.log(`Worker is running on port ${workerPort}`));
 }
