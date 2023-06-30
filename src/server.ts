@@ -1,5 +1,9 @@
 import {createServer} from 'http';
-import {codes, errors, methods} from './constants/index.js';
+import {
+    codes,
+    errors,
+    methods
+} from './constants/index.js';
 import {
     createNewUser,
     deleteUser,
