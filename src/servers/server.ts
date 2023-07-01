@@ -3,15 +3,15 @@ import {
     codes,
     errors,
     methods
-} from './constants/index.js';
+} from '../constants/index.ts';
 import {
     createNewUser,
     deleteUser,
     getAllUsers,
     getUserById,
     updateUser
-} from './controllers/users.js';
-import {objectAsString} from './utils/objectAsString.js';
+} from '../controllers/users.ts';
+import {objectAsString} from '../utils/objectAsString.ts';
 
 const HEADERS = {'Content-Type': 'application/json'};
 

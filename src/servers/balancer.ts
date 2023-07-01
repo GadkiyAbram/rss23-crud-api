@@ -1,5 +1,5 @@
 import http, {IncomingMessage, ServerResponse} from 'http';
-import utils from './utils/index.js';
+import utils from '../utils/index.ts';
 
 const {roundRobin} = utils;
 

@@ -1,8 +1,8 @@
-import {objectAsString} from './objectAsString.js';
-import {stringAsJSON} from './stringAsJSON.js';
-import {isUUID} from './isUUID.js';
-import {checkRequiredFields} from './checkRequiredFields.js';
-import {roundRobin} from './roundRobin.js';
+import {objectAsString} from './objectAsString.ts';
+import {stringAsJSON} from './stringAsJSON.ts';
+import {isUUID} from './isUUID.ts';
+import {checkRequiredFields} from './checkRequiredFields.ts';
+import {roundRobin} from './roundRobin.ts';
 
 export default {
     objectAsString,

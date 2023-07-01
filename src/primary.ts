@@ -1,9 +1,8 @@
 import * as dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
-import {server} from './server.js';
-import http from 'http';
-import {balancer} from './balancer.js';
+import {server} from './servers/server.ts';
+import {balancer} from './servers/balancer.ts';
 
 dotenv.config();
 
@@ -14,12 +13,10 @@ let port: number = parseInt(process.env.PORT as string, 10) || 7000;
 const workerUrls: string[] = [];
 
 if (cluster.isPrimary) {
-    console.log(`Master process ${process.pid} on ${port} is running`);
-
     for (let i = 0; i < cpuCount; i++) {
         let workerPort = ++port;
 
-        cluster.fork({port: workerPort});
+        cluster.fork({workerPort});
         workerUrls.push(`${HOST}:${workerPort}`);
     }
 
@@ -34,7 +31,7 @@ if (cluster.isPrimary) {
         cluster.fork();
     });
 } else {
-    let workerPort = process.env.port;
+    let workerPort = process.env.workerPort;
 
     const workerServer = server();
 

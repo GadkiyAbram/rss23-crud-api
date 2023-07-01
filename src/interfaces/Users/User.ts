@@ -1,4 +1,4 @@
-import {BaseUser} from './BaseUser.js';
+import {BaseUser} from './BaseUser.ts';
 
 export interface User extends BaseUser {
     id: string;
