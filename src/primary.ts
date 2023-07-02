@@ -1,29 +1,31 @@
 import * as dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
-import {server} from './servers/server.ts';
+import {serverOld} from './servers/serverOld.ts';
 import {balancer} from './servers/balancer.ts';
+import {Server} from "./servers/server.ts";
 
 dotenv.config();
 
 const cpuCount = os.cpus().length;
 const HOST: string = process.env.HOST as string;
-let port: number = parseInt(process.env.PORT as string, 10) || 7000;
+const PORT: number = parseInt(process.env.PORT as string, 10) || 7000;
 
 const workerUrls: string[] = [];
 
 if (cluster.isPrimary) {
-    for (let i = 0; i < cpuCount; i++) {
-        let workerPort = ++port;
+    let workerPort = PORT;
 
-        cluster.fork({workerPort});
+    for (let i = 0; i < cpuCount; i++) {
+
+        cluster.fork({workerPort: ++workerPort});
         workerUrls.push(`${HOST}:${workerPort}`);
     }
 
-    const primaryServer = balancer(workerUrls);
+    const balancerServer = balancer(workerUrls);
 
-    primaryServer.listen(4000, () => {
-        console.log(`Main Cluster running on 4000`);
+    balancerServer.listen(PORT, () => {
+        console.log(`Main Cluster running on ${PORT}`);
     });
 
     cluster.on('exit', (worker, code, signal) => {
@@ -33,7 +35,5 @@ if (cluster.isPrimary) {
 } else {
     let workerPort = process.env.workerPort;
 
-    const workerServer = server();
-
-    workerServer.listen(workerPort, () => console.log(`Worker is running on port ${workerPort}`));
+    new Server().createServer().listen(workerPort, () => console.log(`Worker is running on port ${workerPort}`));
 }
