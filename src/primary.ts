@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
-import {serverOld} from './servers/serverOld.ts';
 import {balancer} from './servers/balancer.ts';
 import {Server} from "./servers/server.ts";
 
