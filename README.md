@@ -1,6 +1,6 @@
 Instructions for installing the App "Simple CRUD API"
 
-1. Download git repository
+1. Download git repository (https://github.com/GadkiyAbram/rss23-crud-api/tree/rss23-crud-api-feature)
 2. To install dependencies run: npm i
 3. To start app in dev mode, run: npm run start:dev
 4. Open Postman API Tool to check the routes:
