@@ -1,13 +1,27 @@
-import {createServer} from "http";
-import {codes, errors, methods} from "../constants/index.ts";
-import {createNewUser, deleteUser, getAllUsers, getUserById, updateUser} from "../controllers/users.ts";
-import {objectAsString} from "../utils/objectAsString.ts";
+import {createServer} from 'http';
+import {
+    codes,
+    errors,
+    methods
+} from '../constants/index.ts';
+import {
+    createNewUser,
+    deleteUser,
+    getAllUsers,
+    getUserById,
+    updateUser
+} from '../controllers/users.ts';
+import {objectAsString} from '../utils/objectAsString.ts';
 
 const HEADERS = {'Content-Type': 'application/json'};
 
 export class Server {
     public createServer() {
         return createServer(async (req, res) => {
+            if (!req.url?.match(/api\/users/)) {
+                res.writeHead(codes.NOT_FOUND).end(errors.WRONG_ROUTE);
+            }
+
             if (req.method === methods.GET && req.url === '/api/users') {
                 const result = await getAllUsers();
 

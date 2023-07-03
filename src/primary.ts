@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
 import {balancer} from './servers/balancer.ts';
-import {Server} from "./servers/server.ts";
+import {Server} from './servers/server.ts';
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ if (cluster.isPrimary) {
         workerUrls.push(`${HOST}:${workerPort}`);
     }
 
-    const balancerServer = balancer(workerUrls);
+    const balancerServer = await balancer(workerUrls);
 
     balancerServer.listen(PORT, () => {
         console.log(`Main Cluster running on ${PORT}`);
