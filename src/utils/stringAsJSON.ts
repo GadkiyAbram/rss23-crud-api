@@ -1,0 +1,1 @@
+export const stringAsJSON = (str: string) => JSON.parse(str);
